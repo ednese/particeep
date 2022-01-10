@@ -1,5 +1,6 @@
 import store from 'store'
 import { useState, useEffect } from 'react'
+import { connect } from 'react-redux'
 import { Box, Chip, InputLabel, MenuItem, FormControl, OutlinedInput, Select } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
@@ -23,25 +24,20 @@ function getStyles(category, categories, theme) {
   };
 }
 
-function Filter() {
+function Filter({movies, categories}) {
 
   const theme = useTheme();
-  const [movies, setMovies] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [initialCategories, setInitialCategories] = useState([]);
-
-  store.subscribe(() => setMovies(store.getState().movies));
 
   useEffect(() => {
     const newCategories = [];
     movies.forEach(movie => newCategories.some(category => category === movie.category)? '' : newCategories.push(movie.category));
+    store.dispatch({type: 'UPDATE_CATEGORIES', payload: newCategories });
     setInitialCategories(newCategories);
   }, [movies]);
 
   const handleChange = (event) => {
-    const { target: { value } } = event;
-    setCategories(value);
-    store.dispatch({type: 'UPDATE_MOVIES', payload: movies.map(movie => ({...movie, hide: !(value.some(category => movie.category === category))}) )})
+    store.dispatch({type: 'UPDATE_CATEGORIES', payload: event.target.value })
   };
   return (
     <div>
@@ -77,4 +73,5 @@ function Filter() {
   );
 }
 
-export default Filter;
+const connectedFilter = connect(({movies, categories}) => ({movies, categories}))(Filter);
+export default connectedFilter;

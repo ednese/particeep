@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { connect } from 'react-redux'
 import store from 'store'
 import './Cards.css';
 import { Box, Grid, Paper, IconButton } from '@mui/material';
@@ -17,17 +18,9 @@ const Item = styled(Paper)(({ theme }) => ({
   alignItems: 'center',
 }));
 
-function Cards() {
-  const [movies, setMovies] = useState([]);
-  const [page, setPage] = useState({});
+function Cards({movies, page, categories}) {
   const [userLikesId, setUserLikesId] = useState([]);
   const [userDisikesId, setUserDisikesId] = useState([]);
-
-  store.subscribe(() => {
-    const state = store.getState();
-    setMovies(state.movies);
-    setPage(state.page);
-  });
 
   const handleOpinion = (type, id) => {
     if (type === 'likes') {
@@ -62,7 +55,7 @@ function Cards() {
     <div className="cards">
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2}>
-          {movies.filter(movie => !movie.hide).filter((_, index) => index >= (page.items * (page.index - 1)) && index < (page.items * page.index)).map(movie => (
+          {movies.filter(movie => categories.includes(movie.category)).filter((_, index) => index >= (page.items * (page.index - 1)) && index < (page.items * page.index)).map(movie => (
             <Grid item lg={3} md={4} sm={6} xs={12} key={movie.id} >
               <Item className="cards__card">
                 <p>{movie.category}</p>
@@ -90,4 +83,5 @@ function Cards() {
   );
 }
 
-export default Cards;
+const connectedCards = connect(({movies, page, categories}) => ({movies, page, categories}))(Cards);
+export default connectedCards;
