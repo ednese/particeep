@@ -1,0 +1,11 @@
+.cards .cards__card .cards__card__close {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.cards__card__ratio {
+  position: relative;
+  height: 2px;
+  width: 100%;
+}
