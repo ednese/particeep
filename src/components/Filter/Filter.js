@@ -31,7 +31,7 @@ function Filter({movies, categories}) {
 
   useEffect(() => {
     const newCategories = [];
-    movies.forEach(movie => newCategories.some(category => category === movie.category)? '' : newCategories.push(movie.category));
+    movies.forEach(movie => newCategories.includes(movie.category)? '' : newCategories.push(movie.category));
     store.dispatch({type: 'UPDATE_CATEGORIES', payload: newCategories });
     setInitialCategories(newCategories);
   }, [movies]);
@@ -50,7 +50,7 @@ function Filter({movies, categories}) {
           input={<OutlinedInput style={{ borderColor: 'white' }} label="Category"/>}
           renderValue={(selected) => (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-              {selected.filter(value => initialCategories.some(category => category === value)).map((value) => (
+              {selected.filter(value => initialCategories.includes(value)).map((value) => (
                 <Chip key={value} label={value} style={{color: 'white', background: 'rgba(0,0,0,.3)'}} />
               ))}
             </Box>

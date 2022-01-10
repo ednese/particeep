@@ -24,14 +24,14 @@ function Cards({movies, page, categories}) {
 
   const handleOpinion = (type, id) => {
     if (type === 'likes') {
-      if (userLikesId.some(likeId => likeId === id)) {
+      if (userLikesId.includes(id)) {
         setUserLikesId(userLikesId.filter(likeId => likeId !== id));
       } else {
         setUserLikesId([...userLikesId, id]);
         setUserDisikesId(userDisikesId.filter(dislikeId => dislikeId !== id));
       }
     } else if (type === 'dislikes') {
-      if (userDisikesId.some(dislikeId => dislikeId === id)) {
+      if (userDisikesId.includes(id)) {
         setUserDisikesId(userDisikesId.filter(dislikesId => dislikesId !== id))
       } else {
         setUserDisikesId([...userDisikesId, id]);
@@ -41,8 +41,8 @@ function Cards({movies, page, categories}) {
   }
 
   const setRatioStyle = ({likes, dislikes, id}) => {
-    const userLikes = (userLikesId.some(likeId => likeId === id) ? 1 : 0) + likes;
-    const userDislikes = (userDisikesId.some(dislikeId => dislikeId === id) ? 1 : 0) + dislikes;
+    const userLikes = (userLikesId.includes(id) ? 1 : 0) + likes;
+    const userDislikes = (userDisikesId.includes(id) ? 1 : 0) + dislikes;
     const ratio = (userLikes / (userLikes + userDislikes)) * 100;
     return {background: `linear-gradient(90deg, #fff ${ratio}%, #000 ${ratio}%)`}
   }
@@ -65,13 +65,13 @@ function Cards({movies, page, categories}) {
                     <Close/>
                   </IconButton>
                   <IconButton color='inherit' onClick={() => handleOpinion('likes', movie.id)} >
-                    <ThumbUp color={userLikesId.some(likeId => likeId === movie.id) ? '' : 'disabled'}/>
+                    <ThumbUp color={userLikesId.includes(movie.id) ? '' : 'disabled'}/>
                   </IconButton>
-                  {movie.likes + (userLikesId.some(likeId => likeId === movie.id) ? 1 : 0)}
+                  {movie.likes + (userLikesId.includes(movie.id) ? 1 : 0)}
                   <IconButton color='inherit' onClick={() => handleOpinion('dislikes', movie.id)} >
-                    <ThumbDown color={userDisikesId.some(dislikesId => dislikesId === movie.id) ? '' : 'disabled'}/>
+                    <ThumbDown color={userDisikesId.includes(movie.id) ? '' : 'disabled'}/>
                   </IconButton>
-                  {movie.dislikes + (userDisikesId.some(dislikesId => dislikesId === movie.id) ? 1 : 0)}
+                  {movie.dislikes + (userDisikesId.includes(movie.id) ? 1 : 0)}
                   <div className="cards__card__ratio" style={setRatioStyle(movie)} />
                 </div>
               </Item>
